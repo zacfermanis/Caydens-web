@@ -1,63 +1,123 @@
 # System Patterns
 
 ## Architecture Overview
-- Entity-Component System for game objects
-- Physics-based movement system
-- Stamina management system
-- Platform generation system
-- Win condition system
+1. Component-Based Design
+   - Player component
+   - Platform component
+   - Obstacle component
+   - Win zone component
+   - Health system
 
-## Design Patterns
-- Game Loop Pattern (LÖVE's update/draw cycle)
-- Component Pattern for game entities
-- State Pattern for player states
-- Observer Pattern for collision events
-- Factory Pattern for object creation
+2. Physics System
+   - LÖVE2D physics engine
+   - Custom gravity implementation
+   - Collision detection
+   - Momentum preservation
+
+3. State Management
+   - Game state tracking
+   - Level progression
+   - Health management
+   - Player state
+
+## Key Technical Decisions
+1. Movement System
+   - Independent horizontal/vertical controls
+   - Physics-based movement
+   - Air control mechanics
+   - Momentum preservation
+   - Ground detection
+
+2. Health System
+   - Simple health points
+   - Visual health bar
+   - Collision-based damage
+   - Death and respawn mechanics
+
+3. Level Generation
+   - Procedural platform placement
+   - Zigzag pattern generation
+   - Progressive difficulty scaling
+   - Extended vertical levels
+
+4. Obstacle System
+   - Physics-based obstacles
+   - Collision damage
+   - Spawn management
+   - Difficulty scaling
 
 ## Component Relationships
-- Player Entity
-  - Movement Component
-  - Physics Component
-  - Collision Component
-  - Stamina Component
-  - Ground Detection Component
-- Platform Entity
-  - Physics Component
-  - Visual Component
-- Win Zone Entity
-  - Sensor Component
-  - Visual Component
-- Game State Manager
-  - Menu State
-  - Play State
-  - Win State
+1. Player Interactions
+   - Platform collision
+   - Obstacle damage
+   - Win zone detection
+   - Health management
+
+2. Level Structure
+   - Platform generation
+   - Obstacle spawning
+   - Win zone placement
+   - Player spawn point
+
+3. Game Flow
+   - Level progression
+   - Health management
+   - Death and respawn
+   - Win condition
 
 ## Critical Implementation Paths
-1. Player Movement
-   - Input handling
-   - Physics application
-   - Ground detection
-   - Stamina management
-   - Jump mechanics
+1. Movement
+   - Horizontal movement (A/D)
+   - Jumping (Space)
+   - Boost jumps (W)
+   - Air control
 
-2. Platform System
+2. Health
+   - Health bar display
+   - Damage calculation
+   - Death handling
+   - Respawn mechanics
+
+3. Level Design
    - Platform generation
-   - Physics setup
-   - Visual rendering
+   - Obstacle placement
+   - Win zone positioning
+   - Difficulty scaling
+
+## Design Patterns
+1. Component Pattern
+   - Modular game objects
+   - Reusable components
+   - Clear separation of concerns
+
+2. State Pattern
+   - Game state management
+   - Player state handling
+   - Level state tracking
+
+3. Observer Pattern
+   - Collision detection
+   - Health updates
+   - Win condition checking
+
+## Technical Constraints
+1. Physics
+   - LÖVE2D physics limitations
+   - Custom gravity implementation
    - Collision handling
 
-3. Win Condition
-   - Win zone placement
-   - Collision detection
-   - Win state management
-   - Visual feedback
+2. Performance
+   - Obstacle management
+   - Platform generation
+   - Physics calculations
 
-## Technical Decisions
-- Using LÖVE's built-in physics engine
-- Component-based architecture
-- Stamina-based jump mechanics
-- Ground detection for reliable jumping
-- Space debris visual theme
+3. Gameplay
+   - Movement responsiveness
+   - Health balance
+   - Difficulty progression
 
 ## Notes
-The game uses a component-based architecture with physics-based movement and a stamina system for jump mechanics. Ground detection ensures reliable jumping, and the win condition is implemented through a sensor-based win zone. 
+- Maintain component independence
+- Keep physics calculations efficient
+- Ensure smooth state transitions
+- Balance gameplay mechanics 

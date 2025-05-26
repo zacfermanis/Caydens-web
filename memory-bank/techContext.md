@@ -1,58 +1,116 @@
 # Technical Context
 
-## Technology Stack
-- LÖVE (Love2D) Framework
-- Lua Programming Language
-- Box2D Physics Engine (included with LÖVE)
+## Technologies Used
+1. LÖVE2D Framework
+   - Version: 11.4
+   - Physics engine
+   - Graphics system
+   - Input handling
+   - Audio system
+
+2. Lua Programming Language
+   - Version: 5.1
+   - Object-oriented patterns
+   - Component system
+   - State management
+   - Physics calculations
 
 ## Development Setup
-- LÖVE Framework installation
-- Lua development environment
-- Code editor with Lua support
-- Version control system (Git)
+1. Project Structure
+   - src/
+     - components/
+       - player.lua
+       - platform.lua
+       - obstacle.lua
+       - winZone.lua
+     - main.lua
+   - memory-bank/
+     - Documentation files
 
-## Dependencies
-- LÖVE Framework
-- Box2D Physics Engine
-- Lua standard library
+2. Dependencies
+   - LÖVE2D framework
+   - No external libraries
+   - Built-in physics engine
+   - Standard Lua libraries
 
 ## Technical Constraints
-- 2D graphics only
-- Keyboard input only (WASD + spacebar)
-- Single-threaded Lua execution
-- LÖVE framework limitations
-- Physics-based movement
-- Stamina system limitations
+1. Physics System
+   - Custom gravity implementation
+   - Collision detection
+   - Momentum preservation
+   - Ground detection
 
-## Tool Usage
-- LÖVE for game engine and physics
-- Lua for game logic and mechanics
-- Box2D for collision detection
-- Git for version control
+2. Performance Considerations
+   - Obstacle management
+   - Platform generation
+   - Physics calculations
+   - Memory usage
+
+3. Platform Limitations
+   - LÖVE2D physics engine
+   - Lua performance
+   - Memory management
+   - Cross-platform compatibility
 
 ## Implementation Details
-1. Player Movement
-   - A/D: Horizontal movement
-   - S: Down movement
-   - Spacebar: Jump
-   - W + Spacebar: Boosted jump
-
-2. Physics System
-   - Box2D physics engine
+1. Movement System
+   - Physics-based movement
+   - Custom gravity multiplier
+   - Air control mechanics
    - Ground detection
-   - Collision handling
-   - Platform physics
 
-3. Stamina System
-   - Visual stamina bar
-   - Stamina regeneration
-   - Jump cost management
-   - Boost jump mechanics
+2. Health System
+   - Health points tracking
+   - Damage calculation
+   - Visual health bar
+   - Death handling
 
-4. Win Condition
-   - Sensor-based detection
-   - Visual feedback
+3. Level Generation
+   - Procedural platform placement
+   - Obstacle spawning
+   - Win zone positioning
+   - Difficulty scaling
+
+4. Collision System
+   - Physics-based collisions
+   - Damage calculation
+   - Win condition detection
+   - Platform interaction
+
+## Tool Usage
+1. LÖVE2D
+   - Physics engine
+   - Graphics rendering
+   - Input handling
+   - Audio system
+
+2. Development Tools
+   - Text editor
+   - Version control
+   - Debug tools
+   - Performance monitoring
+
+## Code Patterns
+1. Component System
+   - Modular design
+   - Reusable components
+   - Clear interfaces
    - State management
 
+2. Physics Implementation
+   - Custom gravity
+   - Collision handling
+   - Movement calculations
+   - State updates
+
+3. Game Logic
+   - Level progression
+   - Health management
+   - Win conditions
+   - Difficulty scaling
+
 ## Notes
-The game is built using LÖVE and Lua, with a focus on physics-based movement and stamina management. The implementation includes ground detection, platform generation, and a win condition system. 
+- Keep physics calculations efficient
+- Maintain clean component interfaces
+- Ensure proper memory management
+- Follow LÖVE2D best practices 

@@ -1,10 +1,19 @@
 -- Game state
 local gameState = {
-    gravity = 1500,
+    gravity = 1481,  -- Increased from 981 (+500)
     platforms = {},
+    obstacles = {},
     hasWon = false,
     winMessage = "",
-    winMessageTimer = 0
+    winMessageTimer = 0,
+    obstacleSpawnTimer = 0,
+    obstacleSpawnInterval = 0.5,  -- Spawn obstacles every 0.5 seconds
+    maxObstacles = 20,  -- Maximum number of obstacles allowed at once
+    currentLevel = 1,  -- Track current level
+    maxLevel = 10,     -- Maximum level
+    playerHealth = 100,  -- Add player health
+    maxHealth = 100,     -- Maximum health
+    damageAmount = 20    -- Damage per obstacle hit
 }
 
 -- Initialize game
@@ -17,6 +26,7 @@ function love.load()
     Player = require('src.components.player')
     Platform = require('src.components.platform')
     WinZone = require('src.components.winZone')
+    Obstacle = require('src.components.obstacle')
     
     -- Create player
     gameState.player = Player:new()
@@ -26,37 +36,100 @@ function love.load()
 end
 
 function createLevel()
-    -- Clear existing platforms
+    -- Clear existing platforms and obstacles
     gameState.platforms = {}
+    for _, obstacle in ipairs(gameState.obstacles) do
+        obstacle:destroy()
+    end
+    gameState.obstacles = {}
     
-    -- Create some random platforms
+    -- Reset player health
+    gameState.playerHealth = gameState.maxHealth
+    
+    -- Calculate level-specific parameters
+    local level = gameState.currentLevel
+    local platformCount = 25 + math.floor(level * 3)  -- More platforms for extended level
+    local minPlatformWidth = math.max(40, 100 - (level * 5))
+    local maxPlatformWidth = math.max(60, 150 - (level * 5))
+    local levelWidth = love.graphics.getWidth()
+    local levelHeight = love.graphics.getHeight()
+    local extendedHeight = levelHeight * 3  -- Extend level height 3 times screen height
+    
+    -- Adjust obstacle spawn rate based on level
+    gameState.obstacleSpawnInterval = math.max(0.2, 0.5 - (level * 0.03))
+    gameState.maxObstacles = math.min(30, 20 + level)
+    
+    -- Create platforms
     local platformColors = {
         {0.7, 0.7, 0.7},  -- Gray
         {0.9, 0.9, 0.9}   -- White
     }
     
-    -- Add some platforms at different heights
-    for i = 1, 10 do
-        local x = love.math.random(100, 700)
-        local y = love.math.random(100, 500)
-        local width = love.math.random(80, 150)
-        local color = platformColors[love.math.random(1, 2)]
+    -- Starting position at bottom of screen
+    local startX = levelWidth/2
+    local startY = levelHeight - 100
+    
+    -- Create starting platform
+    local startPlatform = Platform:new(startX, startY, 200, 30, {0.8, 0.8, 0.8})
+    table.insert(gameState.platforms, startPlatform)
+    
+    -- Set player spawn position
+    gameState.player.respawnX = startX
+    gameState.player.respawnY = startY - 50  -- Spawn slightly above the platform
+    
+    -- Generate platforms leading upward
+    local currentX = startX
+    local currentY = startY
+    local minHeightGap = 100   -- Increased for longer jumps
+    local maxHeightGap = 200   -- Increased for longer jumps
+    local minPlatformGap = 50
+    local maxPlatformGap = 150
+    
+    -- Create a zigzag pattern of platforms leading upward
+    for i = 1, platformCount do
+        -- Alternate between left and right movement
+        local direction = i % 2 == 0 and 1 or -1
+        local xOffset = love.math.random(minPlatformGap, maxPlatformGap) * direction
+        currentX = currentX + xOffset
         
-        table.insert(gameState.platforms, Platform:new(x, y, width, 20, color))
+        -- Keep platforms within screen bounds horizontally
+        if currentX < 100 then
+            currentX = 100
+        elseif currentX > levelWidth - 100 then
+            currentX = levelWidth - 100
+        end
+        
+        -- Move upward
+        currentY = currentY - love.math.random(minHeightGap, maxHeightGap)
+        
+        -- Create platform
+        local width = love.math.random(minPlatformWidth, maxPlatformWidth)
+        local color = platformColors[love.math.random(1, 2)]
+        table.insert(gameState.platforms, Platform:new(currentX, currentY, width, 20, color))
     end
     
-    -- Add some larger platforms
-    table.insert(gameState.platforms, Platform:new(400, 550, 200, 30, {0.8, 0.8, 0.8}))
-    table.insert(gameState.platforms, Platform:new(200, 400, 250, 25, {0.9, 0.9, 0.9}))
-    table.insert(gameState.platforms, Platform:new(600, 300, 180, 20, {0.7, 0.7, 0.7}))
+    -- Add some strategic platforms for level progression
+    if level <= 3 then
+        -- Early levels: More forgiving platform placement
+        table.insert(gameState.platforms, Platform:new(levelWidth/2, 200, 200, 30, {0.8, 0.8, 0.8}))
+        table.insert(gameState.platforms, Platform:new(levelWidth/2, 100, 180, 25, {0.9, 0.9, 0.9}))
+    else
+        -- Later levels: More challenging platform placement
+        table.insert(gameState.platforms, Platform:new(levelWidth/2, 200, 150, 25, {0.8, 0.8, 0.8}))
+        table.insert(gameState.platforms, Platform:new(levelWidth/2, 100, 120, 20, {0.9, 0.9, 0.9}))
+    end
     
-    -- Add win zone at the top
-    gameState.winZone = WinZone:new(400, 50)
+    -- Add win zone at the very top of the extended level
+    gameState.winZone = WinZone:new(levelWidth/2, 50)  -- Win zone at the top
     
     -- Reset win state
     gameState.hasWon = false
     gameState.winMessage = ""
     gameState.winMessageTimer = 0
+    gameState.obstacleSpawnTimer = 0
+    
+    -- Reset player to spawn position
+    gameState.player:respawn()
 end
 
 -- Update game state
@@ -67,6 +140,38 @@ function love.update(dt)
     -- Update player
     gameState.player:update(dt)
     
+    -- Update obstacles and check for collisions
+    for i = #gameState.obstacles, 1, -1 do
+        local obstacle = gameState.obstacles[i]
+        obstacle:update(dt)
+        
+        -- Check for collision with player
+        if not gameState.player.isDead and obstacle:checkCollision(gameState.player) then
+            -- Apply damage to player
+            gameState.playerHealth = math.max(0, gameState.playerHealth - gameState.damageAmount)
+            
+            -- Check if player is dead
+            if gameState.playerHealth <= 0 then
+                gameState.player.isDead = true
+                gameState.player.deathTimer = 0
+            end
+            
+            -- Remove the obstacle that hit the player
+            obstacle:destroy()
+            table.remove(gameState.obstacles, i)
+        elseif not obstacle.isActive then
+            obstacle:destroy()
+            table.remove(gameState.obstacles, i)
+        end
+    end
+    
+    -- Spawn new obstacles
+    gameState.obstacleSpawnTimer = gameState.obstacleSpawnTimer + dt
+    if gameState.obstacleSpawnTimer >= gameState.obstacleSpawnInterval then
+        gameState.obstacleSpawnTimer = 0
+        spawnObstacle()
+    end
+    
     -- Update win zone
     if gameState.winZone then
         gameState.winZone:update(dt)
@@ -74,7 +179,12 @@ function love.update(dt)
         -- Check for win condition
         if not gameState.hasWon and gameState.winZone:checkWin(gameState.player) then
             gameState.hasWon = true
-            gameState.winMessage = "You Win! Press R to play again"
+            if gameState.currentLevel < gameState.maxLevel then
+                gameState.currentLevel = gameState.currentLevel + 1
+                gameState.winMessage = "Level " .. (gameState.currentLevel - 1) .. " Complete! Starting Level " .. gameState.currentLevel
+            else
+                gameState.winMessage = "You've completed all levels! Press R to play again"
+            end
             gameState.winMessageTimer = 3  -- Show message for 3 seconds
         end
     end
@@ -82,6 +192,9 @@ function love.update(dt)
     -- Update win message timer
     if gameState.winMessageTimer > 0 then
         gameState.winMessageTimer = gameState.winMessageTimer - dt
+        if gameState.winMessageTimer <= 0 and gameState.hasWon then
+            createLevel()  -- Create next level when message disappears
+        end
     end
 end
 
@@ -92,6 +205,11 @@ function love.draw()
         platform:draw()
     end
     
+    -- Draw obstacles
+    for _, obstacle in ipairs(gameState.obstacles) do
+        obstacle:draw()
+    end
+    
     -- Draw win zone
     if gameState.winZone then
         gameState.winZone:draw()
@@ -100,11 +218,36 @@ function love.draw()
     -- Draw player
     gameState.player:draw()
     
-    -- Draw debug info
+    -- Draw health bar
+    local barWidth = 100
+    local barHeight = 10
+    local barX = 10
+    local barY = 30
+    
+    -- Health bar background
+    love.graphics.setColor(0.3, 0.3, 0.3)
+    love.graphics.rectangle("fill", barX, barY, barWidth, barHeight)
+    
+    -- Health bar fill
+    local healthRatio = gameState.playerHealth / gameState.maxHealth
+    love.graphics.setColor(1, 0, 0, healthRatio)  -- Red with opacity based on health
+    love.graphics.rectangle("fill", barX, barY, barWidth * healthRatio, barHeight)
+    
+    -- Health bar border
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print("X: " .. math.floor(gameState.player.x), 10, 10)
-    love.graphics.print("Y: " .. math.floor(gameState.player.y), 10, 30)
-    love.graphics.print("Velocity Y: " .. math.floor(gameState.player.body:getLinearVelocity()), 10, 50)
+    love.graphics.rectangle("line", barX, barY, barWidth, barHeight)
+    
+    -- Health text
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print("Health: " .. math.floor(gameState.playerHealth), barX, barY + barHeight + 5)
+    
+    -- Draw level info
+    love.graphics.print("Level: " .. gameState.currentLevel, 10, 70)
+    
+    -- Draw debug info
+    love.graphics.print("X: " .. math.floor(gameState.player.x), 10, 90)
+    love.graphics.print("Y: " .. math.floor(gameState.player.y), 10, 110)
+    love.graphics.print("Velocity Y: " .. math.floor(gameState.player.body:getLinearVelocity()), 10, 130)
     
     -- Draw win message
     if gameState.winMessageTimer > 0 then
@@ -118,12 +261,28 @@ function love.draw()
     end
 end
 
+function spawnObstacle()
+    -- Spawn 2-3 obstacles at once
+    local numObstacles = love.math.random(2, 3)
+    
+    for i = 1, numObstacles do
+        -- Only spawn if we haven't reached the maximum
+        if #gameState.obstacles < gameState.maxObstacles then
+            local x = love.math.random(50, love.graphics.getWidth() - 50)
+            local size = love.math.random(20, 40)
+            -- Spawn obstacles above the screen
+            table.insert(gameState.obstacles, Obstacle:new(x, -50 - (i * 30), size))
+        end
+    end
+end
+
 -- Handle key press
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     elseif key == 'r' then
-        -- Reset level
+        -- Reset level and start from level 1
+        gameState.currentLevel = 1
         createLevel()
     end
 end 
