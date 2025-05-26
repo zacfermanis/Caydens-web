@@ -1,60 +1,52 @@
 # Product Context
 
-## Problem Statement
-Game development often requires complex engines that can be overwhelming for beginners or too heavy for simple projects. There's a need for a lightweight, extensible FPS game engine that provides core functionality without unnecessary complexity.
+## Purpose
+This project aims to create an engaging 2D platformer game where players navigate through levels by climbing upward while avoiding obstacles. The game focuses on precise movement and timing, providing a challenging yet rewarding experience.
 
-## Solution
-This Lua FPS Game Engine provides:
-1. A simple but powerful foundation for FPS game development
-2. Clear, modular architecture for easy extension
-3. Essential FPS mechanics out of the box
-4. Minimal dependencies (just Lua and LÖVE)
+## Problem Statement
+Players need an engaging platformer game that tests their reflexes and timing while providing clear goals and satisfying gameplay mechanics.
 
 ## User Experience Goals
-1. **Developers**
-   - Easy to understand and modify codebase
-   - Clear documentation for extending functionality
-   - Minimal boilerplate for new features
-   - Intuitive API for common game mechanics
-
-2. **End Users**
-   - Smooth player movement and controls
-   - Responsive shooting mechanics
-   - Consistent performance
-   - Intuitive gameplay
-
-## How It Works
-The engine is built on a modular architecture:
-1. Core engine (`engine.lua`) handles:
-   - Vector mathematics
-   - Entity management
-   - Collision detection
-   - Ray casting
-
-2. Game implementation (`game.lua`) demonstrates:
-   - Player controls
-   - Basic shooting
-   - Entity interaction
+- Intuitive controls using WASD for movement and spacebar for jumping
+- Clear visual feedback for player actions
+- Responsive and precise movement mechanics
+- Visible and understandable obstacles
+- Clear indication of level progress
+- Satisfying win condition when reaching the top
 
 ## Key Features
-1. **Movement System**
-   - WASD controls
-   - Mouse look
-   - Smooth camera movement
+- WASD movement controls
+- Spacebar jumping mechanics
+- Obstacle avoidance gameplay
+- Vertical level progression
+- Collision detection system
+- Win condition at level top
+- Player physics and movement
 
-2. **Combat System**
-   - Ray casting for shooting
-   - Basic damage system
-   - Weapon management
+## User Workflows
+1. Game Start
+   - Launch game
+   - View instructions/controls
+   - Begin gameplay
 
-3. **Entity System**
-   - Extensible entity framework
-   - Collision detection
-   - Update/draw cycles
+2. Core Gameplay
+   - Use WASD to move player
+   - Press spacebar to jump
+   - Navigate around obstacles
+   - Progress upward through level
+   - Reach top to win
 
-## Future Considerations
-1. Performance optimization
-2. Additional weapon types
-3. More complex entity behaviors
-4. Enhanced collision detection
-5. Better visual feedback 
+3. Game End
+   - Win condition: Reach level top
+   - Option to restart or exit
+
+## Success Metrics
+- Smooth and responsive controls
+- Clear visual feedback
+- Engaging level design
+- Proper collision detection
+- Stable performance
+- Intuitive gameplay flow
+
+## Notes
+The game will focus on providing a challenging yet fair platforming experience with clear goals and satisfying mechanics. 

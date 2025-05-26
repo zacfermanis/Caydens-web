@@ -1,72 +1,44 @@
 # Active Context
 
 ## Current Focus
-- Basic FPS movement and controls
-- Grid-based world rendering
-- First-person camera system
+- Platformer game with space debris theme
+- Player movement and jumping mechanics
+- Stamina system implementation
+- Win condition at level top
 
 ## Recent Changes
-1. Swapped W/S key directions for movement
-2. Implemented ground-based movement
-3. Added grid floor rendering
-4. Set up first-person camera controls
-
-## Active Decisions
-1. **Movement System**
-   - Ground-based movement only
-   - Fixed vertical position
-   - WASD controls with inverted W/S
-   - Mouse look controls
-
-2. **Camera System**
-   - First-person perspective
-   - Clamped pitch rotation
-   - Normalized view vectors
-   - Fixed eye level
-
-3. **World System**
-   - Grid-based floor
-   - Dark gray grid lines
-   - Fixed grid size
-   - Limited world size
-
-## Current Implementation
-- Basic FPS engine structure
-- Vector3 mathematics
-- Camera controls
-- Grid rendering
-- Player movement
+- Implemented stamina system with visual bar
+- Modified W key to only boost jumps (not independent movement)
+- Added ground detection for reliable jumping
+- Fixed multiple jump functionality
+- Added debug information display
 
 ## Next Steps
-1. Test and refine movement controls
-2. Optimize grid rendering
-3. Add basic collision detection
-4. Implement additional features
+1. Test and balance stamina system
+2. Adjust platform generation for better gameplay
+3. Polish win condition mechanics
+4. Add visual feedback for actions
 
-## Active Patterns
-1. **Movement Pattern**
-   - Ground-based movement
-   - Camera-relative direction
-   - Normalized vectors
+## Active Decisions
+- Using LÖVE framework with Lua
+- Component-based architecture
+- Physics-based movement system
+- Stamina-based jump mechanics
+- Space debris visual theme
 
-2. **Rendering Pattern**
-   - 2D projection
-   - Depth-based rendering
-   - Grid-based world
+## Important Patterns
+- Documentation-first approach
+- Component-based design
+- State management
+- Physics-based movement
+- Stamina management
 
-3. **Control Pattern**
-   - WASD movement
-   - Mouse look
-   - Inverted W/S
+## Project Insights
+- Game focuses on vertical platforming
+- Physics and collision are critical
+- Player controls need to be responsive
+- Stamina adds strategic depth
+- Ground detection is essential for reliable jumping
 
-## Current Considerations
-1. Movement smoothness
-2. Control responsiveness
-3. Grid rendering performance
-4. Camera behavior
-
-## Recent Learnings
-1. Vector normalization importance
-2. Camera-relative movement
-3. Grid rendering optimization
-4. Control scheme design 
+## Notes
+The project is in active development with core mechanics implemented. Current focus is on balancing and polishing the gameplay experience. 

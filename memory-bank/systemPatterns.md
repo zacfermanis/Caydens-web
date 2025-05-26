@@ -1,117 +1,63 @@
 # System Patterns
 
 ## Architecture Overview
-The FPS engine follows a modular architecture with clear separation of concerns:
-
-1. **Core Engine**
-   - Vector mathematics
-   - Camera system
-   - Player controls
-   - World rendering
-
-2. **Game Loop**
-   - Update cycle
-   - Render cycle
-   - Input handling
+- Entity-Component System for game objects
+- Physics-based movement system
+- Stamina management system
+- Platform generation system
+- Win condition system
 
 ## Design Patterns
-
-### Object-Oriented Patterns
-- **Prototype Pattern**: Used for Vector3, Camera, and Player classes
-- **Component Pattern**: Entities composed of position, rotation, and behavior
-
-### Movement System
-- Ground-based movement only
-- Relative to camera direction
-- Normalized movement vectors
-- Fixed vertical position
-
-### Camera System
-- First-person perspective
-- Euler angles for rotation
-- Clamped pitch rotation
-- Normalized view vectors
-
-### Rendering System
-- 2D projection of 3D space
-- Grid-based world
-- Perspective projection
-- Depth-based rendering
+- Game Loop Pattern (LÖVE's update/draw cycle)
+- Component Pattern for game entities
+- State Pattern for player states
+- Observer Pattern for collision events
+- Factory Pattern for object creation
 
 ## Component Relationships
+- Player Entity
+  - Movement Component
+  - Physics Component
+  - Collision Component
+  - Stamina Component
+  - Ground Detection Component
+- Platform Entity
+  - Physics Component
+  - Visual Component
+- Win Zone Entity
+  - Sensor Component
+  - Visual Component
+- Game State Manager
+  - Menu State
+  - Play State
+  - Win State
 
-### Player-Camera Relationship
-```
-Player
-  ├── Position (Vector3)
-  ├── Rotation (yaw, pitch)
-  └── Camera
-      ├── View Matrix
-      ├── Forward Vector
-      └── Right Vector
-```
+## Critical Implementation Paths
+1. Player Movement
+   - Input handling
+   - Physics application
+   - Ground detection
+   - Stamina management
+   - Jump mechanics
 
-### Movement System
-```
-Input
-  ├── Keyboard (WASD)
-  └── Mouse (look)
-      └── Player
-          ├── Position Update
-          └── Camera Update
-```
+2. Platform System
+   - Platform generation
+   - Physics setup
+   - Visual rendering
+   - Collision handling
 
-### World System
-```
-Engine
-  └── World
-      ├── Floor Grid
-      └── Rendering
-          ├── Projection
-          └── Depth Check
-```
+3. Win Condition
+   - Win zone placement
+   - Collision detection
+   - Win state management
+   - Visual feedback
 
-## Critical Paths
+## Technical Decisions
+- Using LÖVE's built-in physics engine
+- Component-based architecture
+- Stamina-based jump mechanics
+- Ground detection for reliable jumping
+- Space debris visual theme
 
-### Movement Update
-1. Input processing
-2. Direction calculation
-3. Position update
-4. Camera update
-
-### Rendering Pipeline
-1. View matrix calculation
-2. World-to-screen projection
-3. Depth sorting
-4. Grid rendering
-
-## Implementation Guidelines
-
-### Vector Operations
-- Use Vector3 class for all 3D math
-- Normalize vectors when needed
-- Keep operations minimal
-
-### Camera Control
-- Clamp pitch to prevent flipping
-- Normalize view vectors
-- Update position with player
-
-### Movement Control
-- Ground-based movement only
-- Normalize movement vectors
-- Relative to camera direction
-
-## Extension Points
-
-### New Features
-- Additional movement types
-- Enhanced rendering
-- New entity types
-- Advanced camera modes
-
-### System Improvements
-- Better performance
-- More accurate projection
-- Enhanced controls
-- Additional visual features 
+## Notes
+The game uses a component-based architecture with physics-based movement and a stamina system for jump mechanics. Ground detection ensures reliable jumping, and the win condition is implemented through a sensor-based win zone. 

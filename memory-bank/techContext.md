@@ -1,68 +1,58 @@
 # Technical Context
 
 ## Technology Stack
-- **Language**: Lua 5.1+
-- **Framework**: LÖVE (Love2D)
-- **Development Environment**: Any text editor with Lua support
-
-## Core Components
-
-### Vector3 System
-- Custom Vector3 class for 3D mathematics
-- Supports basic operations: add, subtract, multiply
-- Used for positions, directions, and calculations
-
-### Camera System
-- First-person camera implementation
-- Field of view: 70 degrees
-- Near plane: 0.1
-- Far plane: 1000
-- Supports yaw and pitch rotation
-
-### Player System
-- Eye level position (y = 1.7)
-- Movement speed: 5.0 units/second
-- Mouse sensitivity: 0.1
-- Ground-based movement (y position fixed)
-- WASD controls with inverted W/S
-
-### World System
-- Grid-based floor
-- Size: 100 units (half-width)
-- Grid cell size: 10 units
-- Dark gray grid lines
+- LÖVE (Love2D) Framework
+- Lua Programming Language
+- Box2D Physics Engine (included with LÖVE)
 
 ## Development Setup
-1. Install LÖVE framework
-2. Clone repository
-3. Run with `love .` command
+- LÖVE Framework installation
+- Lua development environment
+- Code editor with Lua support
+- Version control system (Git)
 
 ## Dependencies
-- LÖVE framework (latest stable version)
+- LÖVE Framework
+- Box2D Physics Engine
+- Lua standard library
 
 ## Technical Constraints
-- 2D rendering of 3D space
-- Fixed perspective projection
-- Ground-based movement only
-- No vertical movement
+- 2D graphics only
+- Keyboard input only (WASD + spacebar)
+- Single-threaded Lua execution
+- LÖVE framework limitations
+- Physics-based movement
+- Stamina system limitations
 
-## Performance Considerations
-- Grid rendering optimized for view distance
-- Vector operations kept minimal
-- No complex physics calculations
+## Tool Usage
+- LÖVE for game engine and physics
+- Lua for game logic and mechanics
+- Box2D for collision detection
+- Git for version control
 
-## Code Organization
-- `engine.lua`: Core engine functionality
-- `main.lua`: Game initialization and loop
-- Memory Bank: Project documentation
+## Implementation Details
+1. Player Movement
+   - A/D: Horizontal movement
+   - S: Down movement
+   - Spacebar: Jump
+   - W + Spacebar: Boosted jump
 
-## Testing Strategy
-- Manual testing of movement and controls
-- Visual verification of grid rendering
-- Performance monitoring during movement
+2. Physics System
+   - Box2D physics engine
+   - Ground detection
+   - Collision handling
+   - Platform physics
 
-## Known Technical Limitations
-- No true 3D rendering
-- Limited to ground plane movement
-- Basic collision detection
-- No vertical movement support 
+3. Stamina System
+   - Visual stamina bar
+   - Stamina regeneration
+   - Jump cost management
+   - Boost jump mechanics
+
+4. Win Condition
+   - Sensor-based detection
+   - Visual feedback
+   - State management
+
+## Notes
+The game is built using LÖVE and Lua, with a focus on physics-based movement and stamina management. The implementation includes ground detection, platform generation, and a win condition system. 
