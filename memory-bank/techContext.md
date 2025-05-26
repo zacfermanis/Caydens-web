@@ -1,116 +1,125 @@
 # Technical Context
 
 ## Technologies Used
-1. LÖVE2D Framework
-   - Version: 11.4
-   - Physics engine
-   - Graphics system
-   - Input handling
-   - Audio system
+1. Core Framework
+   - LÖVE2D 11.4
+   - Lua 5.4
+   - Box2D physics engine
+   - Custom physics implementation
 
-2. Lua Programming Language
-   - Version: 5.1
-   - Object-oriented patterns
-   - Component system
-   - State management
-   - Physics calculations
+2. Development Tools
+   - Visual Studio Code
+   - LÖVE2D debug tools
+   - Git version control
+   - Custom debug overlays
+
+3. Asset Management
+   - LÖVE2D image loading
+   - Custom sprite handling
+   - Physics body creation
+   - UI element management
 
 ## Development Setup
 1. Project Structure
-   - src/
-     - components/
-       - player.lua
-       - platform.lua
-       - obstacle.lua
-       - winZone.lua
-     - main.lua
-   - memory-bank/
-     - Documentation files
+   ```
+   src/
+   ├── components/
+   │   ├── player.lua
+   │   ├── platform.lua
+   │   ├── obstacle.lua
+   │   └── winZone.lua
+   ├── systems/
+   │   ├── health.lua
+   │   └── screen.lua
+   ├── utils/
+   │   └── debug.lua
+   └── main.lua
+   ```
 
 2. Dependencies
-   - LÖVE2D framework
-   - No external libraries
-   - Built-in physics engine
-   - Standard Lua libraries
+   - LÖVE2D 11.4
+   - Box2D physics
+   - Custom physics system
+   - Screen management system
+
+3. Build Process
+   - LÖVE2D packaging
+   - Asset bundling
+   - Debug mode toggle
+   - Screen transition handling
 
 ## Technical Constraints
-1. Physics System
+1. Physics
+   - Box2D limitations
    - Custom gravity implementation
-   - Collision detection
-   - Momentum preservation
-   - Ground detection
+   - Collision handling
+   - Camera scrolling
+   - Screen transitions
 
-2. Performance Considerations
-   - Obstacle management
-   - Platform generation
+2. Performance
+   - Frame rate target: 60 FPS
    - Physics calculations
-   - Memory usage
-
-3. Platform Limitations
-   - LÖVE2D physics engine
-   - Lua performance
+   - Screen transitions
+   - UI updates
    - Memory management
-   - Cross-platform compatibility
 
-## Implementation Details
-1. Movement System
-   - Physics-based movement
-   - Custom gravity multiplier
-   - Air control mechanics
-   - Ground detection
+3. Platform
+   - Windows compatibility
+   - LÖVE2D requirements
+   - Screen resolution handling
+   - Input management
+   - UI scaling
 
-2. Health System
-   - Health points tracking
-   - Damage calculation
-   - Visual health bar
-   - Death handling
-
-3. Level Generation
-   - Procedural platform placement
-   - Obstacle spawning
-   - Win zone positioning
-   - Difficulty scaling
-
-4. Collision System
-   - Physics-based collisions
-   - Damage calculation
-   - Win condition detection
-   - Platform interaction
-
-## Tool Usage
+## Tool Usage Patterns
 1. LÖVE2D
-   - Physics engine
-   - Graphics rendering
+   - Physics world management
+   - Screen transitions
+   - Camera control
+   - UI rendering
    - Input handling
-   - Audio system
+   - Debug drawing
 
-2. Development Tools
-   - Text editor
-   - Version control
-   - Debug tools
-   - Performance monitoring
+2. Box2D
+   - Body creation
+   - Collision detection
+   - Physics simulation
+   - Camera scrolling
+   - Screen management
 
-## Code Patterns
-1. Component System
-   - Modular design
-   - Reusable components
-   - Clear interfaces
+3. Custom Systems
+   - Health management
+   - Screen transitions
+   - UI positioning
+   - Death handling
+   - Respawn mechanics
+   - Debug overlays
+
+## Development Workflow
+1. Code Organization
+   - Component-based architecture
+   - System separation
+   - Screen management
+   - UI handling
    - State management
 
-2. Physics Implementation
-   - Custom gravity
-   - Collision handling
-   - Movement calculations
-   - State updates
+2. Testing
+   - Manual gameplay testing
+   - Physics verification
+   - Screen transition testing
+   - UI validation
+   - Death mechanics testing
 
-3. Game Logic
-   - Level progression
-   - Health management
-   - Win conditions
-   - Difficulty scaling
+3. Debug Tools
+   - Visual debug overlays
+   - Physics visualization
+   - Screen transition debugging
+   - UI element inspection
+   - State monitoring
 
 ## Notes
-- Keep physics calculations efficient
-- Maintain clean component interfaces
-- Ensure proper memory management
-- Follow LÖVE2D best practices 
+- Maintain consistent physics behavior
+- Optimize screen transitions
+- Ensure smooth UI updates
+- Handle death mechanics properly
+- Manage screen state effectively
+- Provide clear debug information 

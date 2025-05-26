@@ -7,19 +7,25 @@
    - Platform collision
    - Win condition detection
    - Level progression system
+   - Screen scrolling system
+   - Death and respawn mechanics
 
 2. Health System
    - Health bar display
    - Damage on obstacle collision
    - Death and respawn mechanics
    - Health reset on level completion
+   - Full health restoration on respawn
+   - Single automatic restart on death
 
 3. Level Design
-   - Extended vertical levels
+   - 10-screen vertical progression
+   - Camera scrolling system
    - Zigzag platform patterns
    - Progressive difficulty
    - Strategic platform placement
    - Win zone at level top
+   - Spawn at first platform
 
 4. Movement System
    - Independent horizontal/vertical controls
@@ -27,6 +33,16 @@
    - Jump while moving
    - Ground detection
    - Movement speed adjustments
+   - Stamina system
+   - Charge jump mechanics
+
+5. UI System
+   - Health bar with numerical value
+   - Fixed stamina display
+   - Dynamic charge indicator
+   - Screen counter
+   - Death screen overlay
+   - Debug information display
 
 ## In Progress
 1. Gameplay Balance
@@ -34,12 +50,14 @@
    - Adjusting health and damage values
    - Balancing platform spacing
    - Testing difficulty progression
+   - Optimizing screen transitions
 
 2. Level Design
    - Creating more varied platform patterns
    - Implementing environmental hazards
    - Adding checkpoints
    - Designing boss levels
+   - Improving screen transitions
 
 ## Planned Features
 1. Power-ups and Collectibles
@@ -53,6 +71,7 @@
    - Movement trails
    - Platform animations
    - Background elements
+   - Screen transition effects
 
 3. Game Modes
    - Time attack
@@ -70,6 +89,7 @@
    - Some platform gaps might be too large
    - Obstacle spawn rates need balancing
    - Difficulty progression might be too steep
+   - Screen transitions could be smoother
 
 3. Health System
    - Damage values might need adjustment
@@ -77,10 +97,11 @@
    - Respawn mechanics might need refinement
 
 ## Recent Achievements
-1. Implemented health system
-2. Created extended level design
-3. Enhanced movement mechanics
-4. Added progressive difficulty
+1. Implemented screen scrolling system
+2. Added death and respawn mechanics
+3. Improved UI with fixed stamina display
+4. Enhanced movement mechanics
+5. Added health restoration on respawn
 
 ## Next Milestones
 1. Complete gameplay balance
