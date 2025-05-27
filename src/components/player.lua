@@ -12,7 +12,7 @@ local Player = {
     currentJumpTime = 0,  -- Current time in jump
     isJumping = false,
     moveSpeed = {x = 0},  -- Only track horizontal movement
-    gravityMultiplier = 3,  -- Triple gravity effect on player
+    gravityMultiplier = 2.5,  -- Reduced from 3 for better air control
     -- Stamina properties
     maxStamina = 100,
     currentStamina = 100,
@@ -39,10 +39,13 @@ local Player = {
     respawnDelay = 1.0  -- Time to wait before respawning
 }
 
-function Player:new()
+function Player:new(gameState)
     local player = {}
     setmetatable(player, self)
     self.__index = self
+    
+    -- Store gameState reference
+    player.gameState = gameState
     
     -- Initialize physics body
     player.body = love.physics.newBody(world, player.x, player.y, "dynamic")
@@ -65,11 +68,18 @@ function Player:new()
 end
 
 function Player:respawn()
+    -- Reset death state
     self.isDead = false
     self.deathTimer = 0
+    
+    -- Reset stamina
     self.currentStamina = self.maxStamina
+    
+    -- Reset position and velocity
     self.body:setPosition(self.respawnX, self.respawnY)
     self.body:setLinearVelocity(0, 0)
+    
+    -- Reset movement state
     self.isJumping = false
     self.isCharging = false
     self.chargeTime = 0
@@ -77,6 +87,10 @@ function Player:respawn()
     self.currentJumpTime = 0
     self.spacePressed = false
     self.moveSpeed = {x = 0}
+    
+    -- Update position
+    self.x = self.respawnX
+    self.y = self.respawnY
 end
 
 function Player:update(dt)
@@ -95,11 +109,15 @@ function Player:update(dt)
        self.x > love.graphics.getWidth() + 100 then
         self.isDead = true
         self.deathTimer = 0
+        self.gameState.deathScreenTimer = 0
+        self.gameState.hasRestarted = false
         return
     end
     
-    -- Apply custom gravity to player
+    -- Get current velocities
     local currentVelX, currentVelY = self.body:getLinearVelocity()
+    
+    -- Apply custom gravity to player
     self.body:setLinearVelocity(currentVelX, currentVelY + (world:getGravity() * self.gravityMultiplier * dt))
     
     -- Regenerate stamina
@@ -107,15 +125,22 @@ function Player:update(dt)
         self.currentStamina = math.min(self.maxStamina, self.currentStamina + self.staminaRegenRate * dt)
     end
     
-    -- Get current velocities
-    local currentVelX, currentVelY = self.body:getLinearVelocity()
+    -- Get updated velocities after gravity
+    currentVelX, currentVelY = self.body:getLinearVelocity()
     
     -- Handle horizontal movement
     local targetSpeed = self.isGrounded and self.speed or self.airSpeed
+    local moveInput = 0
+    
     if love.keyboard.isDown('a') then
-        currentVelX = -targetSpeed
+        moveInput = -1
     elseif love.keyboard.isDown('d') then
-        currentVelX = targetSpeed
+        moveInput = 1
+    end
+    
+    -- Apply movement input
+    if moveInput ~= 0 then
+        currentVelX = moveInput * targetSpeed
     else
         -- Apply slight air resistance when not pressing movement keys
         if not self.isGrounded then
@@ -125,12 +150,11 @@ function Player:update(dt)
         end
     end
     
-    -- Apply horizontal movement, preserve vertical velocity
+    -- Apply the new velocity to the physics body
     self.body:setLinearVelocity(currentVelX, currentVelY)
     
     -- Check if player is grounded
-    local velocityY = self.body:getLinearVelocity()
-    self.isGrounded = math.abs(velocityY) < 1
+    self.isGrounded = math.abs(currentVelY) < 1
     
     -- Handle jump duration
     if self.isJumping then
@@ -153,69 +177,70 @@ function Player:update(dt)
     end
     
     -- Handle space key press for jumping
-    if love.keyboard.isDown('space') and not self.spacePressed then
-        self.spacePressed = true
-        -- Quick tap jump
-        if not self.isJumping and self.isGrounded and self.currentStamina >= self.staminaJumpCost then
-            local jumpForce = self.jumpForce
-            if love.keyboard.isDown('w') then
-                jumpForce = self.boostJumpForce
-                self.currentStamina = self.currentStamina - self.staminaBoostCost
-            else
-                self.currentStamina = self.currentStamina - self.staminaJumpCost
+    if love.keyboard.isDown('space') then
+        if not self.spacePressed then
+            self.spacePressed = true
+            -- Quick tap jump
+            if not self.isJumping and self.isGrounded and self.currentStamina >= self.staminaJumpCost then
+                local jumpForce = self.jumpForce
+                if love.keyboard.isDown('w') then
+                    jumpForce = self.boostJumpForce
+                    self.currentStamina = self.currentStamina - self.staminaBoostCost
+                else
+                    self.currentStamina = self.currentStamina - self.staminaJumpCost
+                end
+                -- Apply jump force while preserving horizontal velocity
+                self.body:setLinearVelocity(currentVelX, jumpForce)
+                self.isJumping = true
+                self.currentJumpTime = 0
             end
-            -- Preserve horizontal velocity when jumping
-            local currentVelX = self.body:getLinearVelocity()
-            self.body:setLinearVelocity(currentVelX, jumpForce)
-            self.isJumping = true
-            self.currentJumpTime = 0
         end
-    elseif not love.keyboard.isDown('space') then
-        self.spacePressed = false
-    end
-    
-    -- Handle charging
-    if love.keyboard.isDown('space') and not self.isJumping and self.isGrounded then
-        if not self.isCharging then
-            self.chargeDelayTimer = self.chargeDelayTimer + dt
-            if self.chargeDelayTimer >= self.chargeDelay then
-                self.isCharging = true
+        
+        -- Handle charging
+        if not self.isJumping and self.isGrounded then
+            if not self.isCharging then
+                self.chargeDelayTimer = self.chargeDelayTimer + dt
+                if self.chargeDelayTimer >= self.chargeDelay then
+                    self.isCharging = true
+                    self.chargeDelayTimer = 0
+                end
+            else
+                self.chargeTime = math.min(self.chargeTime + dt, self.maxChargeTime)
+            end
+        end
+    else
+        -- Handle jump release
+        if self.spacePressed then
+            self.spacePressed = false
+            if self.isCharging then
+                local jumpForce = self.jumpForce
+                local staminaCost = self.staminaJumpCost
+                
+                if love.keyboard.isDown('w') then
+                    jumpForce = self.boostJumpForce
+                    staminaCost = self.staminaBoostCost
+                elseif self.chargeTime > 0 then
+                    -- Calculate charge jump force based on charge time with exponential scaling
+                    local chargeRatio = self.chargeTime / self.maxChargeTime
+                    chargeRatio = chargeRatio * chargeRatio  -- Square the ratio for exponential scaling
+                    jumpForce = self.jumpForce + (self.maxChargeJumpForce - self.jumpForce) * chargeRatio
+                    staminaCost = self.chargeJumpCost
+                end
+                
+                -- Check if we have enough stamina
+                if self.currentStamina >= staminaCost then
+                    -- Apply jump force while preserving horizontal velocity
+                    self.body:setLinearVelocity(currentVelX, jumpForce)
+                    self.isJumping = true
+                    self.currentJumpTime = 0
+                    self.currentStamina = self.currentStamina - staminaCost
+                end
+                
+                self.isCharging = false
+                self.chargeTime = 0
                 self.chargeDelayTimer = 0
             end
-        else
-            self.chargeTime = math.min(self.chargeTime + dt, self.maxChargeTime)
         end
-    end
-    
-    -- Handle jump release
-    if self.isCharging and not love.keyboard.isDown('space') then
-        local jumpForce = self.jumpForce
-        local staminaCost = self.staminaJumpCost
-        
-        if love.keyboard.isDown('w') then
-            jumpForce = self.boostJumpForce
-            staminaCost = self.staminaBoostCost
-        elseif self.chargeTime > 0 then
-            -- Calculate charge jump force based on charge time with exponential scaling
-            local chargeRatio = self.chargeTime / self.maxChargeTime
-            chargeRatio = chargeRatio * chargeRatio  -- Square the ratio for exponential scaling
-            jumpForce = self.jumpForce + (self.maxChargeJumpForce - self.jumpForce) * chargeRatio
-            staminaCost = self.chargeJumpCost
-        end
-        
-        -- Check if we have enough stamina
-        if self.currentStamina >= staminaCost then
-            -- Preserve horizontal velocity when jumping
-            local currentVelX = self.body:getLinearVelocity()
-            self.body:setLinearVelocity(currentVelX, jumpForce)
-            self.isJumping = true
-            self.currentJumpTime = 0
-            self.currentStamina = self.currentStamina - staminaCost
-        end
-        
-        self.isCharging = false
-        self.chargeTime = 0
-        self.chargeDelayTimer = 0
     end
     
     -- Update position

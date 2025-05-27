@@ -6,12 +6,14 @@
    - Lua 5.4
    - Box2D physics engine
    - Custom physics implementation
+   - Level numbering system
 
 2. Development Tools
    - Visual Studio Code
    - LÖVE2D debug tools
    - Git version control
    - Custom debug overlays
+   - Level progression tracking
 
 3. Asset Management
    - LÖVE2D image loading
@@ -55,6 +57,7 @@
    - Collision handling
    - Camera scrolling
    - Screen transitions
+   - Obstacle falling mechanics
 
 2. Performance
    - Frame rate target: 60 FPS
@@ -62,6 +65,7 @@
    - Screen transitions
    - UI updates
    - Memory management
+   - Level state tracking
 
 3. Platform
    - Windows compatibility
@@ -69,6 +73,7 @@
    - Screen resolution handling
    - Input management
    - UI scaling
+   - Level numbering display
 
 ## Tool Usage Patterns
 1. LÖVE2D
@@ -78,6 +83,7 @@
    - UI rendering
    - Input handling
    - Debug drawing
+   - Level state management
 
 2. Box2D
    - Body creation
@@ -101,6 +107,7 @@
    - Screen management
    - UI handling
    - State management
+   - Level progression tracking
 
 2. Testing
    - Manual gameplay testing
@@ -108,6 +115,7 @@
    - Screen transition testing
    - UI validation
    - Death mechanics testing
+   - Level numbering consistency
 
 3. Debug Tools
    - Visual debug overlays
@@ -122,4 +130,5 @@
 - Ensure smooth UI updates
 - Handle death mechanics properly
 - Manage screen state effectively
-- Provide clear debug information 
+- Provide clear debug information
+- Maintain level numbering consistency 

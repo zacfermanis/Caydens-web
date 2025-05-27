@@ -15,6 +15,8 @@ function Obstacle:new(x, y, size)
     self.size = size
     self.color = {0.8, 0.2, 0.2}  -- Red color for obstacles
     self.isActive = true
+    self.x = x
+    self.y = y
     
     -- Set collision category
     self.fixture:setCategory(3)  -- Category 3 for obstacles
@@ -24,8 +26,13 @@ function Obstacle:new(x, y, size)
 end
 
 function Obstacle:update(dt)
+    -- Update position from physics body
+    if self.body and self.body:isDestroyed() == false then
+        self.x, self.y = self.body:getPosition()
+    end
+    
     -- Check if obstacle is out of bounds
-    if self.body:getY() > love.graphics.getHeight() + 100 then
+    if self.y > love.graphics.getHeight() + 100 then
         self.isActive = false
     end
 end
@@ -34,18 +41,22 @@ function Obstacle:draw()
     if not self.isActive then return end
     
     love.graphics.setColor(self.color)
-    local x, y = self.body:getPosition()
-    love.graphics.rectangle("fill", x - self.size/2, y - self.size/2, self.size, self.size)
+    love.graphics.rectangle("fill", self.x - self.size/2, self.y - self.size/2, self.size, self.size)
 end
 
 function Obstacle:destroy()
-    self.body:destroy()
+    if self.body and self.body:isDestroyed() == false then
+        self.body:destroy()
+    end
+    self.isActive = false
 end
 
 function Obstacle:checkCollision(player)
+    if not self.isActive then return false end
+    
     -- Get obstacle position and size
-    local ox = self.body:getX()
-    local oy = self.body:getY()
+    local ox = self.x
+    local oy = self.y
     local osize = self.size
     
     -- Get player position and size

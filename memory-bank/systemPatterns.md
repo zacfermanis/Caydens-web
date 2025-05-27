@@ -8,6 +8,7 @@
    - Win zone component
    - Health system
    - Screen management system
+   - Level numbering system
 
 2. Physics System
    - LÖVE2D physics engine
@@ -18,7 +19,7 @@
 
 3. State Management
    - Game state tracking
-   - Level progression
+   - Level progression (1-10 from bottom to top)
    - Health management
    - Player state
    - Screen state
@@ -45,9 +46,10 @@
    - 10-screen vertical progression
    - Camera scrolling
    - Screen transitions
-   - Win zone placement
-   - Screen counter
-   - Fixed UI elements
+   - Win zone at level 10 (top)
+   - Player spawn at level 1 (bottom)
+   - Obstacles spawn from top
+   - Level numbering display
 
 4. UI System
    - Fixed stamina display
@@ -65,14 +67,16 @@
    - Health management
    - Screen transitions
    - Death handling
+   - Level progression tracking
 
 2. Level Structure
    - Platform generation
-   - Obstacle spawning
-   - Win zone placement
-   - Player spawn point
+   - Obstacle spawning from top
+   - Win zone at level 10
+   - Player spawn at level 1
    - Screen management
    - Camera control
+   - Level numbering system
 
 3. Game Flow
    - Level progression
@@ -138,6 +142,7 @@
    - Collision handling
    - Camera scrolling
    - Screen transitions
+   - Obstacle falling mechanics
 
 2. Performance
    - Obstacle management
@@ -159,4 +164,5 @@
 - Ensure smooth state transitions
 - Balance gameplay mechanics
 - Optimize screen transitions
-- Provide clear UI feedback 
+- Provide clear UI feedback
+- Maintain consistent level numbering 

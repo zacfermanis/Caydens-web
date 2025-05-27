@@ -9,6 +9,7 @@
    - Level progression system
    - Screen scrolling system
    - Death and respawn mechanics
+   - Intuitive level numbering (1-10 from bottom to top)
 
 2. Health System
    - Health bar display
@@ -24,8 +25,9 @@
    - Zigzag platform patterns
    - Progressive difficulty
    - Strategic platform placement
-   - Win zone at level top
-   - Spawn at first platform
+   - Win zone at level 10 (top)
+   - Spawn at level 1 (bottom)
+   - Obstacles spawn from top and fall down
 
 4. Movement System
    - Independent horizontal/vertical controls
@@ -90,6 +92,7 @@
    - Obstacle spawn rates need balancing
    - Difficulty progression might be too steep
    - Screen transitions could be smoother
+   - Level numbering consistency verification needed
 
 3. Health System
    - Damage values might need adjustment
@@ -102,15 +105,18 @@
 3. Improved UI with fixed stamina display
 4. Enhanced movement mechanics
 5. Added health restoration on respawn
+6. Updated level numbering system for better clarity
 
 ## Next Milestones
 1. Complete gameplay balance
 2. Implement power-up system
 3. Add visual effects
 4. Create boss levels
+5. Verify level numbering consistency
 
 ## Notes
 - Focus on maintaining smooth controls
 - Keep difficulty progression engaging
 - Ensure clear visual feedback
-- Balance risk and reward 
+- Balance risk and reward
+- Maintain consistent level numbering 
